@@ -1,0 +1,39 @@
+CREATE PROCEDURE Admin_Register
+    @FullName NVARCHAR(100),
+    @Email NVARCHAR(100),
+    @PasswordHash NVARCHAR(255),
+    @ContactNumber NVARCHAR(20) = NULL,
+    @CreatedDate DATETIME = NULL,
+    @IsActive BIT = NULL,
+    @ActivationId UNIQUEIDENTIFIER = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Check if the Email already exists
+    IF EXISTS (SELECT 1 FROM Admins WHERE Email = @Email)
+    BEGIN
+        RAISERROR('Email already exists.', 16, 1);
+        RETURN;
+    END
+
+    -- Insert into Admins table
+    INSERT INTO Admins (
+        FullName,
+        Email,
+        PasswordHash,
+        ContactNumber,
+        CreatedDate,
+        IsActive,
+        ActivationId
+    )
+    VALUES (
+        @FullName,
+        @Email,
+        @PasswordHash,
+        @ContactNumber,
+        ISNULL(@CreatedDate, GETDATE()),
+        ISNULL(@IsActive, 1),
+        ISNULL(@ActivationId, NEWID())
+    );
+END;
