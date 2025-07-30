@@ -187,9 +187,9 @@
     <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ExamLibrary\ExamLibrary.csproj">
-      <Project>{cf4280a1-9958-4a72-966f-c8be6799af2a}</Project>
-      <Name>ExamLibrary</Name>
+    <ProjectReference Include="..\ExamClassLibrary\ExamClassLibrary.csproj">
+      <Project>{a96c736d-a34b-4867-bef5-b8417feb8044}</Project>
+      <Name>ExamClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

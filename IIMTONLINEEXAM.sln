@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		DatabaseScripts.docx = DatabaseScripts.docx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamLibrary", "..\ExamLibrary\ExamLibrary.csproj", "{CF4280A1-9958-4A72-966F-C8BE6799AF2A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamClassLibrary", "ExamClassLibrary\ExamClassLibrary.csproj", "{A96C736D-A34B-4867-BEF5-B8417FEB8044}"
 EndProject
 Global
@@ -24,10 +22,6 @@ Global
 		{6869D6F3-912E-4861-A74F-6A832CD4B6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6869D6F3-912E-4861-A74F-6A832CD4B6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6869D6F3-912E-4861-A74F-6A832CD4B6D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF4280A1-9958-4A72-966F-C8BE6799AF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF4280A1-9958-4A72-966F-C8BE6799AF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF4280A1-9958-4A72-966F-C8BE6799AF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF4280A1-9958-4A72-966F-C8BE6799AF2A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A96C736D-A34B-4867-BEF5-B8417FEB8044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A96C736D-A34B-4867-BEF5-B8417FEB8044}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A96C736D-A34B-4867-BEF5-B8417FEB8044}.Release|Any CPU.ActiveCfg = Release|Any CPU
