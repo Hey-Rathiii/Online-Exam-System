@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace ExamLibrary.DAL
 {
+    public class AdminLoginResult
+    {
+        public int ResultCode { get; set; }
+        public int? AdminId { get; set; }
+    }
     public class AdminDAL
     {
         public bool RegisterAdmin(AdminDTO admin)
@@ -19,7 +24,7 @@ namespace ExamLibrary.DAL
             {
                 conn = DBHelper.Instance.GetConnection();
 
-                using (SqlCommand cmd = new SqlCommand("Admin_Register", conn))
+                using (SqlCommand cmd = new SqlCommand("sp_AdminRegister", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -55,5 +60,63 @@ namespace ExamLibrary.DAL
                 DBHelper.Instance.CloseConnection();
             }
         }
+
+        public static void IsActivation(Guid ActivationId)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_ActivateAdminId", DBHelper.Instance.GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ActivationId", ActivationId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL Error: " + ex.Message);
+            }
+            finally
+            {
+                DBHelper.Instance.CloseConnection();
+            }
+        }
+        public static AdminLoginResult IsAdminValid(string email, string password)
+        {
+            var result = new AdminLoginResult();
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_VerifyAdminLoginInfo", DBHelper.Instance.GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@Password", password);
+
+                    cmd.Parameters.Add("@Result", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("@admin_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    cmd.ExecuteNonQuery();
+
+                    result.ResultCode = Convert.ToInt32(cmd.Parameters["@Result"].Value);
+
+                    if (result.ResultCode == 2)
+                    {
+                        result.AdminId = Convert.ToInt32(cmd.Parameters["@admin_id"].Value);
+                    }
+                }
+            }
+            catch
+            {
+                result.ResultCode = 0; // treat as invalid
+            }
+            finally
+            {
+                DBHelper.Instance.CloseConnection();
+            }
+
+            return result;
+        }
+
     }
 }

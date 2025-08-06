@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\AdminRegister.aspx" />
+    <Content Include="Admin\Login.aspx" />
+    <Content Include="Admin\VerifyEmail.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -86,6 +88,8 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="LandingPage.aspx" />
+    <Content Include="LandingPage.css" />
+    <Content Include="LandingPage.js" />
     <Content Include="MyImages\logo.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -149,6 +153,20 @@
     </Compile>
     <Compile Include="Admin\AdminRegister.aspx.designer.cs">
       <DependentUpon>AdminRegister.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\VerifyEmail.aspx.cs">
+      <DependentUpon>VerifyEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\VerifyEmail.aspx.designer.cs">
+      <DependentUpon>VerifyEmail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Helper\CryptoHelper.cs" />
     <Compile Include="Helper\MailHelper.cs" />
