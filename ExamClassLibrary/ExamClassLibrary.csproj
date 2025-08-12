@@ -45,9 +45,14 @@
     <Compile Include="Class1.cs" />
     <Compile Include="DAL\AdminDAL.cs" />
     <Compile Include="DAL\DBHelper.cs" />
+    <Compile Include="DAL\ExamDAL.cs" />
+    <Compile Include="DAL\QuestionDAL.cs" />
     <Compile Include="DAL\StudentDAL.cs" />
     <Compile Include="DAL\SubjectDAL.cs" />
     <Compile Include="Model\AdminDTO.cs" />
+    <Compile Include="Model\ExamDTO.cs" />
+    <Compile Include="Model\InsertQueDTO.cs" />
+    <Compile Include="Model\SubjectDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
