@@ -15,5 +15,7 @@ namespace ExamLibrary.Model
         public DateTime CreatedDate { get; set; } = DateTime.MinValue;
         public bool IsActive { get; set; } = true;
         public Guid ActivationId { get; set; } = Guid.NewGuid();
+
+
     }
 }

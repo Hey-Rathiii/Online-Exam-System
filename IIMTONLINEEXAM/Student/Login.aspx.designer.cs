@@ -11,7 +11,7 @@ namespace IIMTONLINEEXAM.Student
 {
 
 
-    public partial class StudentRegistration
+    public partial class Login
     {
 
         /// <summary>
@@ -22,15 +22,6 @@ namespace IIMTONLINEEXAM.Student
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
-        /// <summary>
-        /// txtFullName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFullName;
 
         /// <summary>
         /// txtEmail control.
@@ -51,31 +42,13 @@ namespace IIMTONLINEEXAM.Student
         protected global::System.Web.UI.WebControls.TextBox txtPassword;
 
         /// <summary>
-        /// txtConfirmPassword control.
+        /// btnLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConfirmPassword;
-
-        /// <summary>
-        /// txtContact control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtContact;
-
-        /// <summary>
-        /// btnRegister control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnRegister;
+        protected global::System.Web.UI.WebControls.Button btnLogin;
 
         /// <summary>
         /// lblMessage control.

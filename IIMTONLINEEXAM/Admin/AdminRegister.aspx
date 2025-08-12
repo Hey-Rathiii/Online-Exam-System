@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="text-center">
-                    <asp:Button ID="btnRegister" runat="server" CssClass="btn btn-primary w-100" Text="Register Admin" OnClick="btnRegister_Click" />
+                    <asp:Button ID="btnRegister" runat="server" CssClass="btn btn-primary w-100" Text="Register Admin" OnClick="BtnRegister_Click1" />
                 </div>
 
                 <div class="mt-3 text-danger text-center">
