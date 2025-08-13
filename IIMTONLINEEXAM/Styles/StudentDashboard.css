@@ -1,0 +1,94 @@
+﻿body {
+    font-family: 'Poppins', sans-serif; /* Clean, modern font */
+    background-image: url('../Images/xa.png'); /* Soft gradient from light blue to white */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.examsContainer {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    width: 98%;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    padding-top: 5rem;
+}
+
+.exam {
+    /*            border: 1px solid #ccc;*/
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding: 10px;
+    background: #00acc1;
+    border-radius: 1rem;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    width: 70%;
+    transition: 0.7s;
+    /*            height: 15rem;*/
+}
+
+    /*        .exam:hover{
+            box-shadow: 2px 2px 8px 0 black;
+        }*/
+
+    .exam h3 {
+        font-size: 18px;
+        /*                color: #333;*/
+    }
+
+    .exam p {
+        font-size: 14px;
+        /*                color: #666;*/
+    }
+
+        .exam p strong {
+            /*                    color: #333;*/
+        }
+
+.subject {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.date {
+    margin-bottom: 2rem;
+}
+
+.btnDiv {
+    display: flex;
+    justify-content: end;
+    height: 2.5rem;
+}
+
+.btnStart {
+    border: 1px solid blue;
+    border-radius: 5px;
+    width: 10%;
+}
+
+    .btnStart:hover {
+        background-color: lightgrey;
+    }
+
+.MsgStart {
+    color: red;
+}
+
+.secondDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+.showMsg {
+    color: red;
+    align-content: end;
+}

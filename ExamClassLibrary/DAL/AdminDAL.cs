@@ -24,7 +24,7 @@ namespace ExamLibrary.DAL
             {
                 conn = DBHelper.Instance.GetConnection();
 
-                using (SqlCommand cmd = new SqlCommand("sp_AdminRegister", conn))
+                using (SqlCommand cmd = new SqlCommand("AdminRegister", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 

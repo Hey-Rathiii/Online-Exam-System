@@ -97,5 +97,29 @@ namespace ExamLibrary.DAL
                 DBHelper.Instance.CloseConnection();
             }
         }
+
+        public static DataTable GetAllExams()
+        {
+            DataTable examsTable = new DataTable();
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_GetAllExams", DBHelper.Instance.GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    examsTable.Load(reader);
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+
+            }
+            return examsTable;
+        }
     }
 }
