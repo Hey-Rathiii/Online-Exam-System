@@ -87,7 +87,7 @@ namespace ExamLibrary.DAL
 
             try
             {
-                using (SqlCommand cmd = new SqlCommand("sp_VerifyAdminLoginInfo", DBHelper.Instance.GetConnection()))
+                using (SqlCommand cmd = new SqlCommand("VerifyAdminLoginInfo", DBHelper.Instance.GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Email", email);

@@ -13,7 +13,9 @@ namespace ExamClassLibrary.Model
         public string SubjectName { get; set; }
         public int CreatedBy { get; set; } 
         public int SubjectID { get; set; }
-        public int adminId { get; set; }
+        
+        public int subjectId { get; set; }
+        public string updatedName { get; set; }
 
     }
 }

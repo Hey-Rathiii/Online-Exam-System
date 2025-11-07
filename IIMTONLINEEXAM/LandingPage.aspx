@@ -29,8 +29,7 @@
                         <li class="nav-item"><a class="nav-link text-light" href="#about">About</a></li>
                         <li class="nav-item"><a class="nav-link text-light" href="#contact">Contact</a></li>
                         <li class="nav-item d-flex align-items-center">
-                            <a class="btn btn-outline-warning me-2 btn-animate" href="Login.aspx">Login</a>
-                            <a class="btn btn-outline-warning me-2 btn-animate" href="Register.aspx">Register</a>
+                            <a class="btn btn-outline-warning me-2 btn-animate" href="Register.aspx">Register/Login</a>
                         </li>
                     </ul>
                 </div>

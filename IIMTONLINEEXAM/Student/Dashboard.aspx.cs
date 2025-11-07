@@ -36,7 +36,7 @@ namespace IIMTONLINEEXAM.Student
                         string ExamDate = row["ExamDate"].ToString();
                         string StartTime = row["StartTime"].ToString();
                         string EndTime = row["EndTime"].ToString();
-                        string DurationInMinutes = row["DurationInMinutes"].ToString();
+                        string DurationMinutes = row["DurationMinutes"].ToString();
 
                         string disableAttribute = $"onclick=\"showMessage({ExamID})\"";
 
@@ -53,7 +53,7 @@ namespace IIMTONLINEEXAM.Student
                         string ID = ExamID;
                         string EncryptedExamID = CryptoHelper.Encrypt(ExamID);
                         string EncodedKey = HttpUtility.UrlEncode(EncryptedExamID);
-                        string url = $"ExamplatfeormNew.aspx?key={EncodedKey}";
+                        string url = $"ExamPlatform.aspx?key={EncodedKey}";
 
                         if (DateTime.Now.Date == DateTime.Parse(ExamDate).Date)
                         {
@@ -94,7 +94,7 @@ namespace IIMTONLINEEXAM.Student
                      </div>
                      <p><strong>Start Time:</strong> {StartTime}</p>
                      <p><strong>End Time:</strong> {EndTime}</p>
-                     <p><strong>Duration:</strong> {DurationInMinutes} minutes</p>
+                     <p><strong>Duration:</strong> {DurationMinutes} minutes</p>
                  </div>
                  <div class='showMsg'>
                      <h5 class='msg_{ID}'></h5>

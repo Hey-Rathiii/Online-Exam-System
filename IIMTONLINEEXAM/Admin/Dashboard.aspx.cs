@@ -24,7 +24,7 @@ namespace IIMTONLINEEXAM.Admin
                 LoadExamsinDropdown();
 
                 int examId = Convert.ToInt32(ddlExams.SelectedValue);
-                 LoadQuestionsByExamID(examId);
+                LoadQuestionsByExamID(examId);
             }
         }
 
@@ -50,12 +50,12 @@ namespace IIMTONLINEEXAM.Admin
                 subjectDTO.SubjectName = txtSubjectName.Text;
                 subjectDTO.CreatedBy = Convert.ToInt32(Session["AdminID"]); // Ensure AdminID from session
                 int success = SubjectDAL.AddSubject(subjectDTO);
-                if (success==1)
+                if (success == 1)
                 {
                     lblMessage.Text = "Subject added successfully.";
                     lblMessage.CssClass = "text-success";
                 }
-                else if (success !=1)
+                else if (success != 1)
                 {
                     lblMessage.Text = "Failed to add subject.";
                     lblMessage.CssClass = "text-danger";
@@ -63,7 +63,7 @@ namespace IIMTONLINEEXAM.Admin
                 else
                 {
                     lblMessage.Text = "Subject already exists.";
-                    
+
                 }
                 txtSubjectName.Text = ""; // Clear input field
                 LoadSubjects(); // Reload subjects grid
@@ -80,7 +80,7 @@ namespace IIMTONLINEEXAM.Admin
             if (e.CommandName == "DeleteSubject")
             {
                 //int subjectId = Convert.ToInt32(e.CommandArgument);
-                
+
                 // Ensure AdminID from session
                 SubjectDTO subjectDTO = new SubjectDTO();
                 subjectDTO.SubjectID = Convert.ToInt32(e.CommandArgument);
@@ -102,7 +102,7 @@ namespace IIMTONLINEEXAM.Admin
                 }
 
                 LoadSubjects();// Refresh GridView
-               // LoadSubjectsInDropDown(); // Refresh dropdown if applicable
+                               // LoadSubjectsInDropDown(); // Refresh dropdown if applicable
             }
         }
 
@@ -120,24 +120,27 @@ namespace IIMTONLINEEXAM.Admin
 
         protected void gvSubjects_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-            //int subjectId = Convert.ToInt32(gvSubjects.DataKeys[e.RowIndex].Value);
 
-            //GridViewRow row = gvSubjects.Rows[e.RowIndex];
-            //string updatedName = ((TextBox)row.Cells[1].Controls[0]).Text.Trim();
+            GridViewRow row = gvSubjects.Rows[e.RowIndex];
 
-            //if (!string.IsNullOrEmpty(updatedName))
-            //{
-            //    bool updated = SubjectDAL.UpdateSubject(subjectId, updatedName);
-            //    if (updated)
-            //    {
-            //        gvSubjects.EditIndex = -1;
-            //        LoadSubjects();
-            //    }
-            //    else
-            //    {
-            //        // Optional: Show error message
-            //    }
-            //}
+            SubjectDTO subjectDTO = new SubjectDTO();
+
+            subjectDTO.subjectId = Convert.ToInt32(gvSubjects.DataKeys[e.RowIndex].Value);
+            subjectDTO.updatedName = ((TextBox)row.Cells[1].Controls[0]).Text.Trim();
+
+            if (!string.IsNullOrEmpty(subjectDTO.updatedName))
+            {
+                bool updated = SubjectDAL.UpdateSubject(subjectDTO);
+                if (updated)
+                {
+                    gvSubjects.EditIndex = -1;
+                    LoadSubjects();
+                }
+                else
+                {
+                    // Optional: Show error message
+                }
+            }
         }
 
         #endregion
@@ -147,7 +150,7 @@ namespace IIMTONLINEEXAM.Admin
         {
             SubjectDTO subjectdto = new SubjectDTO();
             subjectdto.statusFilter = -1; // -1 means all
-            subjectdto.adminId = Convert.ToInt32(Session["AdminID"]); // Ensure AdminID from session
+            subjectdto.AdminID = Convert.ToInt32(Session["AdminID"]); // Ensure AdminID from session
             ddlSubjects.Items.Clear();
             DataTable subjects = SubjectDAL.GetAllSubjects(subjectdto);
             ddlSubjects.DataSource = subjects;
@@ -228,7 +231,7 @@ namespace IIMTONLINEEXAM.Admin
             examDTO.startTime = TimeSpan.Parse(txtStartTime.Text);
             examDTO.endTime = TimeSpan.Parse(txtEndTime.Text);
             examDTO.durationMinutes = int.Parse(txtDuration.Text);
-            
+
 
             bool success = ExamDAL.InsertExam(examDTO);
 
@@ -257,7 +260,7 @@ namespace IIMTONLINEEXAM.Admin
         {
             GridViewRow row = gvExams.Rows[e.RowIndex];
             ExamDTO examDTO = new ExamDTO();
-            examDTO.examId= Convert.ToInt32(gvExams.DataKeys[e.RowIndex].Value);
+            examDTO.examId = Convert.ToInt32(gvExams.DataKeys[e.RowIndex].Value);
             examDTO.subjectId = Convert.ToInt32(((DropDownList)row.FindControl("ddlSubjectEdit")).SelectedValue);
             examDTO.examTitle = ((TextBox)row.FindControl("txtExamTitleEdit")).Text;
             examDTO.examDate = Convert.ToDateTime(((TextBox)row.FindControl("txtExamDateEdit")).Text);
@@ -265,47 +268,47 @@ namespace IIMTONLINEEXAM.Admin
             examDTO.endTime = TimeSpan.Parse(((TextBox)row.FindControl("txtEndTimeEdit")).Text);
             examDTO.durationMinutes = Convert.ToInt32(((TextBox)row.FindControl("txtDurationEdit")).Text);
 
-            
+
 
             bool updated = ExamDAL.UpdateExam(examDTO);
 
             gvExams.EditIndex = -1;
             LoadExams();
         }
-#endregion
+        #endregion
 
 
-#region Questions
-private void LoadExamsinDropdown()
-{
-     ExamDTO examDTO = new ExamDTO();
+        #region Questions
+        private void LoadExamsinDropdown()
+        {
+            ExamDTO examDTO = new ExamDTO();
             examDTO.statusFilter = -1; // 0 for All, 1 for Active, 2 for Inactive
             examDTO.adminId = Convert.ToInt32(Session["AdminID"]); // Ensure AdminID from session
             DataTable dt = ExamDAL.GetExams(examDTO); ; // assumes you already created this method
 
-    ddlExams.DataSource = dt;
-    ddlExams.DataTextField = "ExamTitle";
-    ddlExams.DataValueField = "ExamID";
-    ddlExams.DataBind();
+            ddlExams.DataSource = dt;
+            ddlExams.DataTextField = "ExamTitle";
+            ddlExams.DataValueField = "ExamID";
+            ddlExams.DataBind();
 
-    ddlExams.Items.Insert(0, new ListItem("-- Select Exam --", "0"));
-}
+            ddlExams.Items.Insert(0, new ListItem("-- Select Exam --", "0"));
+        }
 
-protected void btnSaveQuestion_Click(object sender, EventArgs e)
-{
-    //int examId = Convert.ToInt32(ddlExams.SelectedValue);
-    //string question = txtQuestion.Text.Trim();
-    //string a = txtOptionA.Text.Trim();
-    //string b = txtOptionB.Text.Trim();
-    //string c = txtOptionC.Text.Trim();
-    //string d = txtOptionD.Text.Trim();
-    //string correct = txtCorrectOption.Text.Trim().ToUpper();
-    //int marks = Convert.ToInt32(txtMarks.Text.Trim());
+        protected void btnSaveQuestion_Click(object sender, EventArgs e)
+        {
+            //int examId = Convert.ToInt32(ddlExams.SelectedValue);
+            //string question = txtQuestion.Text.Trim();
+            //string a = txtOptionA.Text.Trim();
+            //string b = txtOptionB.Text.Trim();
+            //string c = txtOptionC.Text.Trim();
+            //string d = txtOptionD.Text.Trim();
+            //string correct = txtCorrectOption.Text.Trim().ToUpper();
+            //int marks = Convert.ToInt32(txtMarks.Text.Trim());
 
-    InsertQueDTO insert = new InsertQueDTO();
+            InsertQueDTO insert = new InsertQueDTO();
 
-    insert.ExamId = Convert.ToInt32(ddlExams.SelectedValue);
-    insert.QuestionText = txtQuestion.Text.Trim();
+            insert.ExamId = Convert.ToInt32(ddlExams.SelectedValue);
+            insert.QuestionText = txtQuestion.Text.Trim();
             insert.optionA = txtOptionA.Text.Trim();
             insert.optionB = txtOptionB.Text.Trim();
             insert.optionC = txtOptionC.Text.Trim();
@@ -313,93 +316,93 @@ protected void btnSaveQuestion_Click(object sender, EventArgs e)
             insert.correctOption = txtCorrectOption.Text.Trim().ToUpper();
             insert.marks = Convert.ToInt32(txtMarks.Text.Trim());
 
-    bool result = QuestionDAL.InsertQuestion(insert);
+            bool result = QuestionDAL.InsertQuestion(insert);
 
-    if (result)
-    {
-        // clear form
-        ddlExams.SelectedIndex = 0;
-        txtQuestion.Text = txtOptionA.Text = txtOptionB.Text = txtOptionC.Text = txtOptionD.Text = txtCorrectOption.Text = txtMarks.Text = "";
+            if (result)
+            {
+                // clear form
+                ddlExams.SelectedIndex = 0;
+                txtQuestion.Text = txtOptionA.Text = txtOptionB.Text = txtOptionC.Text = txtOptionD.Text = txtCorrectOption.Text = txtMarks.Text = "";
 
-        LoadQuestionsByExamID(insert.ExamId); // reload grid
-    }
-}
-private void LoadQuestionsByExamID(int examID)
-{
+                LoadQuestionsByExamID(insert.ExamId); // reload grid
+            }
+        }
+        private void LoadQuestionsByExamID(int examID)
+        {
             InsertQueDTO dTO = new InsertQueDTO();
             dTO.ExamId = examID;
             DataTable dt = QuestionDAL.GetQuestionsByExamId(dTO); // returns all questions with ExamTitle if needed
-    gvQuestions.DataSource = dt;
-    gvQuestions.DataBind();
-}
+            gvQuestions.DataSource = dt;
+            gvQuestions.DataBind();
+        }
 
-protected void ddlExams_SelectedIndexChanged(object sender, EventArgs e)
-{
-    int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
-    if (selectedExamId > 0)
-    {
-        LoadQuestionsByExamID(selectedExamId);
-    }
-    else
-    {
-        gvQuestions.DataSource = null;
-        gvQuestions.DataBind();
-    }
-}
+        protected void ddlExams_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
+            if (selectedExamId > 0)
+            {
+                LoadQuestionsByExamID(selectedExamId);
+            }
+            else
+            {
+                gvQuestions.DataSource = null;
+                gvQuestions.DataBind();
+            }
+        }
 
-protected void gvQuestions_RowEditing(object sender, GridViewEditEventArgs e)
-{
-    gvQuestions.EditIndex = e.NewEditIndex;
-    int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
-    LoadQuestionsByExamID(selectedExamId);
-}
+        protected void gvQuestions_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            gvQuestions.EditIndex = e.NewEditIndex;
+            int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
+            LoadQuestionsByExamID(selectedExamId);
+        }
 
-protected void gvQuestions_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-{
-    gvQuestions.EditIndex = -1;
-    int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
-    LoadQuestionsByExamID(selectedExamId);
-}
+        protected void gvQuestions_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gvQuestions.EditIndex = -1;
+            int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
+            LoadQuestionsByExamID(selectedExamId);
+        }
 
-protected void gvQuestions_RowUpdating(object sender, GridViewUpdateEventArgs e)
-{
-    int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
-    int questionId = Convert.ToInt32(gvQuestions.DataKeys[e.RowIndex].Value);
+        protected void gvQuestions_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
+            int questionId = Convert.ToInt32(gvQuestions.DataKeys[e.RowIndex].Value);
 
-    GridViewRow row = gvQuestions.Rows[e.RowIndex];
-            InsertQueDTO updateDTO= new InsertQueDTO();
+            GridViewRow row = gvQuestions.Rows[e.RowIndex];
+            InsertQueDTO updateDTO = new InsertQueDTO();
 
-    updateDTO.QuestionText = ((TextBox)row.FindControl("txtQuestionText")).Text.Trim();
-   updateDTO.optionA = ((TextBox)row.FindControl("txtOptionA")).Text.Trim();
-    updateDTO.optionB = ((TextBox)row.FindControl("txtOptionB")).Text.Trim();
-    updateDTO.optionC= ((TextBox)row.FindControl("txtOptionC")).Text.Trim();
-    updateDTO.optionD = ((TextBox)row.FindControl("txtOptionD")).Text.Trim();
-    updateDTO.correctOption = ((TextBox)row.FindControl("txtCorrect")).Text.Trim();
-    updateDTO.marks = Convert.ToInt32(((TextBox)row.FindControl("txtMarks")).Text.Trim());
+            updateDTO.QuestionText = ((TextBox)row.FindControl("txtQuestionText")).Text.Trim();
+            updateDTO.optionA = ((TextBox)row.FindControl("txtOptionA")).Text.Trim();
+            updateDTO.optionB = ((TextBox)row.FindControl("txtOptionB")).Text.Trim();
+            updateDTO.optionC = ((TextBox)row.FindControl("txtOptionC")).Text.Trim();
+            updateDTO.optionD = ((TextBox)row.FindControl("txtOptionD")).Text.Trim();
+            updateDTO.correctOption = ((TextBox)row.FindControl("txtCorrect")).Text.Trim();
+            updateDTO.marks = Convert.ToInt32(((TextBox)row.FindControl("txtMarks")).Text.Trim());
 
-    QuestionDAL.UpdateQuestion(updateDTO);
+            QuestionDAL.UpdateQuestion(updateDTO);
 
-    gvQuestions.EditIndex = -1;
-    LoadQuestionsByExamID(selectedExamId);
-}
+            gvQuestions.EditIndex = -1;
+            LoadQuestionsByExamID(selectedExamId);
+        }
 
-protected void gvQuestions_RowDeleting(object sender, GridViewDeleteEventArgs e)
-{
+        protected void gvQuestions_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
             InsertQueDTO deleteDTO = new InsertQueDTO();
             deleteDTO.QuestionId = Convert.ToInt32(gvQuestions.DataKeys[e.RowIndex].Value);
-            
-    bool isDeleted = QuestionDAL.DeleteQuestion(deleteDTO); // Make sure this method exists
 
-    if (isDeleted)
-    {
-        int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
-        LoadQuestionsByExamID(selectedExamId);
-    }
-    else
-    {
-        // Optional: Show error message if deletion fails
-    }
-}
+            bool isDeleted = QuestionDAL.DeleteQuestion(deleteDTO); // Make sure this method exists
+
+            if (isDeleted)
+            {
+                int selectedExamId = Convert.ToInt32(ddlExams.SelectedValue);
+                LoadQuestionsByExamID(selectedExamId);
+            }
+            else
+            {
+                // Optional: Show error message if deletion fails
+            }
+        }
     }
 }
 #endregion

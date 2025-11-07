@@ -54,9 +54,18 @@ namespace IIMTONLINEEXAM.Student
             {
 
                 // Valid student - start session and redirect
-                Session["StudentID"] = studentId;
+                //Session["StudentID"] = studentId;
 
-                Response.Redirect("/Student/Home.aspx");
+                //// Response.Redirect("/Student/ShowExam.aspx");
+                //Response.Redirect("~/Student/ShowExam.aspx?StudentId=" + studentId);
+
+
+                if (studentId > 0) // valid student
+                {
+                    Session["StudentID"] = studentId;
+                    Response.Redirect("~/Student/ShowExams.aspx");
+                }
+
             }
             txtEmail.Text = "";
             txtPassword.Text = "";

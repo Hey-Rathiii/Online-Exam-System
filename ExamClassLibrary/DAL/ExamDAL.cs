@@ -128,6 +128,37 @@ namespace ExamClassLibrary.DAL
             }
         }
 
+        public static bool HasStudentTakenExam(int studentId, int examId)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_CheckStudentExamTaken", DBHelper.Instance.GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@StudentID", studentId);
+                    cmd.Parameters.AddWithValue("@ExamID", examId);
+
+                    // ExecuteScalar returns object, so convert to int safely
+                    object result = cmd.ExecuteScalar();
+                    int count = 0;
+                    if (result != null && int.TryParse(result.ToString(), out count))
+                    {
+                        return count > 0;
+                    }
+                    return false;
+                }
+            }
+            catch
+            {
+                // You can log exception here if you want
+                return false;
+            }
+            finally
+            {
+                DBHelper.Instance.CloseConnection();
+            }
+        }
+
 
 
     }

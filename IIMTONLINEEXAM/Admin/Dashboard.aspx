@@ -17,7 +17,13 @@
          </li>
      </ul>
 
-     
+   
+     <asp:HyperLink ID="hlNavigate" runat="server" 
+    NavigateUrl="~/Admin/AiQuestionGenerator.aspx" 
+    Text="AI Question Generator" 
+    CssClass="btn btn-info">
+</asp:HyperLink>
+
      <!-- Tab Content -->
      <div class="tab-content border p-4" id="adminTabContent">
          <!-- Subject Tab -->
@@ -492,17 +498,17 @@
 
         var minDate = yyyy + '-' + mm + '-' + dd;
         var examDateInput = document.getElementById('<%= txtExamDate.ClientID %>');
-        if (examDateInput) {
-            examDateInput.setAttribute("min", minDate);
-        }
-    };
+             if (examDateInput) {
+                 examDateInput.setAttribute("min", minDate);
+             }
+         };
 
 
 
 
-    $(document).on('input', '[id$=txtMarks]', function () {
-        this.value = this.value.replace(/[^0-9]/g, ''); // remove non-numeric
-    });
+         $(document).on('input', '[id$=txtMarks]', function () {
+             this.value = this.value.replace(/[^0-9]/g, ''); // remove non-numeric
+         });
 
      });
 

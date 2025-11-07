@@ -24,6 +24,15 @@ namespace IIMTONLINEEXAM.Admin
         protected global::System.Web.UI.WebControls.HiddenField hdnActiveTab;
 
         /// <summary>
+        /// hlNavigate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlNavigate;
+
+        /// <summary>
         /// pnlAddSubject control.
         /// </summary>
         /// <remarks>

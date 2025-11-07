@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using ExamLibrary.DAL;
-using ExamLibrary.Model;
-using OnlineExamSystem.Helper;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace IIMTONLINEEXAM.Admin
 {
@@ -14,73 +10,105 @@ namespace IIMTONLINEEXAM.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
-        protected void BtnRegister_Click1(object sender, EventArgs e)
+
+        protected void btnRegister_Click(object sender, EventArgs e)
         {
+            string fullName = txtFullName.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string password = txtPassword.Text.Trim();
+            string confirmPassword = txtConfirmPassword.Text.Trim();
+            string contact = txtContact.Text.Trim();
+
+            // ✅ Server-side validation (important even if client-side is done)
+            if (string.IsNullOrEmpty(fullName) ||
+                string.IsNullOrEmpty(email) ||
+                string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(confirmPassword) ||
+                string.IsNullOrEmpty(contact))
+            {
+                lblMessage.Text = "All fields are required.";
+                return;
+            }
+
+            if (password != confirmPassword)
+            {
+                lblMessage.Text = "Passwords do not match.";
+                return;
+            }
+
+            // Hash password before saving
+            string hashedPassword = HashPassword(password);
+
             try
             {
-                AdminDTO admin = new AdminDTO
+                string connStr = ConfigurationManager.ConnectionStrings["DBConcetion"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connStr))
                 {
-                    FullName = txtFullName.Text.Trim(),
-                    Email = txtEmail.Text.Trim(),
-                    PasswordHash = txtPassword.Text, // 🔐 Consider hashing
-                    ContactNumber = txtContact.Text.Trim(),
-                    CreatedDate = DateTime.Now,
-                    IsActive = true,
-                    ActivationId = Guid.NewGuid()
-                };
+                    con.Open();
 
-                AdminDAL dal = new AdminDAL();
-                bool isRegistered = dal.RegisterAdmin(admin); // returns false if email exists
+                    // Check if email already exists
+                    string checkQuery = "SELECT COUNT(*) FROM Admins WHERE Email=@Email";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
+                    {
+                        checkCmd.Parameters.AddWithValue("@Email", email);
+                        int exists = (int)checkCmd.ExecuteScalar();
+                        if (exists > 0)
+                        {
+                            lblMessage.Text = "Email already registered.";
+                            return;
+                        }
+                    }
 
-                if (!isRegistered)
-                {
-                    lblMessage.Text = "You are already registered with this email.";
-                    lblMessage.CssClass = "text-danger";
-                    return;
+                    // Insert new admin
+                    string insertQuery = "INSERT INTO Admins (FullName, Email, PasswordHash, ContactNumber) VALUES (@FullName, @Email, @PasswordHash, @ContactNumber)";
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@FullName", fullName);
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+                        cmd.Parameters.AddWithValue("@ContactNumber", contact);
+
+                        int rows = cmd.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            lblMessage.Text = "Registration successful!";
+                            ClearForm();
+                        }
+                        else
+                        {
+                            lblMessage.Text = "Error during registration. Try again.";
+                        }
+                    }
                 }
-
-                // Send verification email
-                string baseUrl = Request.Url.GetLeftPart(UriPartial.Authority);
-                string verifyUrl = $"{baseUrl}/Admin/VerifyEmail.aspx?id={admin.ActivationId}";
-
-                string subject = "Admin Email Verification - IIMT Online Exam";
-                string body = $@"
-                    <p>Dear {admin.FullName},</p>
-                    <p>Thank you for registering as Admin. Please click the link below to verify your email address:</p>
-                    <p><a href='{verifyUrl}'>Verify Email</a></p>
-                    <br/>
-                    <p>If you did not register, please ignore this message.</p>";
-
-                bool isEmailSent = MailHelper.SendVerificationEmail(admin.Email, subject, body);
-
-                if (isEmailSent)
-                {
-                    lblMessage.Text = "Admin registered successfully! A verification email has been sent.";
-                    lblMessage.CssClass = "text-success";
-                }
-                else
-                {
-                    lblMessage.Text = "Admin registered, but failed to send verification email.";
-                    lblMessage.CssClass = "text-warning";
-                }
-
-                ClearFields();
             }
             catch (Exception ex)
             {
                 lblMessage.Text = "Error: " + ex.Message;
-                lblMessage.CssClass = "text-danger";
             }
         }
-        private void ClearFields()
+
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        private void ClearForm()
         {
             txtFullName.Text = "";
             txtEmail.Text = "";
             txtPassword.Text = "";
+            txtConfirmPassword.Text = "";
             txtContact.Text = "";
         }
-
     }
 }

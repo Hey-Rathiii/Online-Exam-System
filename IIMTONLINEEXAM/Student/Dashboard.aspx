@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" MasterPageFile="~/Student/Student.Master" Inherits="IIMTONLINEEXAM.Student.Dashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="DashBoard.aspx.cs" MasterPageFile="~/Student/Student.Master" Inherits="IIMTONLINEEXAM.Student.Dashboard" %>
 
 <asp:Content ID="StdDashboard" runat="server" ContentPlaceHolderID="ContentPlaceHolder1" >
         <link rel="stylesheet" href="../Styles/StudentDashBoard.css" />
@@ -7,7 +7,7 @@
     </div>
     <script type="text/javascript">
         // Refresh the page every 1 minute (60000 milliseconds)
-        setInterval(function () {
+        setInterval(function () {                                                                                                                                                       
             location.reload(); // Reloads the current page
         }, 60000);
 

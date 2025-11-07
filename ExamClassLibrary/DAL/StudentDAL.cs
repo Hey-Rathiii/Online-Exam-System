@@ -57,7 +57,7 @@ namespace ExamLibrary.DAL
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("SQL Error: " + ex.Message);
             }
@@ -120,6 +120,33 @@ namespace ExamLibrary.DAL
 
             }
             return examsTable;
+        }
+
+        public static bool insertStudentAnswer(int StudentID, int ExamID, int QuestionID, char givenAnswerOption)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_InsertStudentAnswer", DBHelper.Instance.GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@StudentID", StudentID);
+                    cmd.Parameters.AddWithValue("@ExamID", ExamID);
+                    cmd.Parameters.AddWithValue("@QuestionID", QuestionID);
+                    cmd.Parameters.AddWithValue("@givenAnswerOption", givenAnswerOption);
+
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                DBHelper.Instance.CloseConnection();
+            }
         }
     }
 }

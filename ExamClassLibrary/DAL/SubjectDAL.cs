@@ -31,7 +31,7 @@ namespace ExamLibrary.DAL
                     
                 }
             }
-              catch (Exception ex)
+              catch (Exception )
               {
                  // Log the exception (not implemented here)
                  return null;
@@ -90,6 +90,7 @@ namespace ExamLibrary.DAL
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error in DeleteSubject: " + ex.Message);
                 // Log the exception (not implemented here)
                 return false;
             }
@@ -99,6 +100,58 @@ namespace ExamLibrary.DAL
             }
 
         }
+
+        public static bool UpdateSubject(SubjectDTO sub)
+
+        {
+
+            try
+
+            {
+
+                using (SqlCommand cmd = new SqlCommand("sp_UpdateSubject", DBHelper.Instance.GetConnection()))
+
+                {
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@SubjectID", sub.SubjectID);
+
+                    cmd.Parameters.AddWithValue("@SubjectName", sub.SubjectName);
+
+                    cmd.Parameters.AddWithValue("@AdminID", sub.AdminID);
+
+                    int rows = cmd.ExecuteNonQuery();
+
+                    return rows > 0;
+
+                }
+
+            }
+
+           // catch (Exception ex)
+             catch (Exception )
+
+            {
+
+                // Log the exception (not implemented here)
+
+                return false;
+
+            }
+
+            finally
+
+            {
+
+                DBHelper.Instance.CloseConnection();
+
+            }
+
+        }
+
+
+
     }
 }
     
