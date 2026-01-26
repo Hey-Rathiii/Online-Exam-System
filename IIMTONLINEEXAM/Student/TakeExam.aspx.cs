@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using ExamClassLibrary.DAL;
 using ExamClassLibrary.Model;
-using ExamLibrary.DAL;
-using OnlineExamSystem.Helper;
-using static ExamClassLibrary.DAL.StudentAnswerDAL;
 
 namespace IIMTONLINEEXAM.Student
 {
@@ -16,225 +11,167 @@ namespace IIMTONLINEEXAM.Student
     {
         private const string S_Questions = "DT_Questions";
         private const string S_Answers = "ANS_DICT";
-        private int _examId;
+        private const string S_EndTime = "EXAM_END";
+
+        private const int DEFAULT_MINUTES = 30;
+
+        private int examId;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["StudentID"] == null)
+                Response.Redirect("~/Student/Login.aspx");
 
-            int ExamID = HttpUtility.UrlDecode(Request.QueryString["examId"]) != null ? int.Parse(CryptoHelper.Decrypt(HttpUtility.UrlDecode(Request.QueryString["examId"]))) : 0;
-            _examId = ExamID;
+            if (Session["Disqualified"] != null)
+                Response.Redirect("Disqualified.aspx");
+
+            string id = Request.QueryString["ExamID"];
+            if (id == null) Response.Redirect("ExamNavigator.aspx");
+
+            examId = Convert.ToInt32(id);
 
             if (!IsPostBack)
             {
-                LoadQuestions(_examId);
+                DateTime end;
+
+                if (Session[S_EndTime] == null)
+                {
+                    end = DateTime.Now.AddMinutes(DEFAULT_MINUTES);
+                    Session[S_EndTime] = end;
+                }
+                else end = (DateTime)Session[S_EndTime];
+
+                hfEndTime.Value = end.ToString("o");
+
+                LoadQuestions();
                 BindFormView();
+            }
+            else
+            {
+                if (Session[S_EndTime] != null)
+                    hfEndTime.Value = ((DateTime)Session[S_EndTime]).ToString("o");
             }
         }
 
-        private void LoadQuestions(int examId)
+        private void LoadQuestions()
         {
-            InsertQueDTO queDTO = new InsertQueDTO();
-            queDTO.ExamId = examId;
-
-            DataTable dt = QuestionDAL.GetQuestionsByExamId(queDTO);
+            InsertQueDTO dto = new InsertQueDTO { ExamID = examId };
+            DataTable dt = QuestionDAL.GetQuestionsByExamId(dto);
 
             Session[S_Questions] = dt;
             Session[S_Answers] = new Dictionary<int, string>();
         }
 
-        private DataTable CurrentQuestions()
-        {
-            return Session[S_Questions] as DataTable;
-        }
-
-        private Dictionary<int, string> Answers()
-        {
-            return Session[S_Answers] as Dictionary<int, string>;
-        }
+        private DataTable Questions => Session[S_Questions] as DataTable;
+        private Dictionary<int, string> Answers => Session[S_Answers] as Dictionary<int, string>;
 
         private void BindFormView()
         {
-            DataTable dt = CurrentQuestions();
-            if (dt == null || dt.Rows.Count == 0)
-            {
-                lblProgress.Text = "No questions found.";
-                fvQuestion.DataSource = null;
-                fvQuestion.DataBind();
-                btnPrev.Visible = btnNext.Visible = btnFinish.Visible = false;
-                return;
-            }
-
-            if (fvQuestion.PageIndex < 0) fvQuestion.PageIndex = 0;
-            if (fvQuestion.PageIndex > dt.Rows.Count - 1) fvQuestion.PageIndex = dt.Rows.Count - 1;
+            DataTable dt = Questions;
 
             fvQuestion.DataSource = dt;
             fvQuestion.DataBind();
 
-            lblProgress.Text = $"Question {fvQuestion.PageIndex + 1} of {dt.Rows.Count}";
+            lblProgress.Text = $"{fvQuestion.PageIndex + 1} / {dt.Rows.Count}";
 
-            // Button visibility control
             btnPrev.Visible = fvQuestion.PageIndex > 0;
-            btnNext.Visible = fvQuestion.PageIndex < (dt.Rows.Count - 1);
-            btnFinish.Visible = fvQuestion.PageIndex == (dt.Rows.Count - 1);
-           // btnViewResult.Visible = fvQuestion.PageIndex == (dt.Rows.Count - 1); // ✅ Show only on last question
+            btnNext.Visible = fvQuestion.PageIndex < dt.Rows.Count - 1;
+            btnFinish.Visible = fvQuestion.PageIndex == dt.Rows.Count - 1;
+        }
+
+        protected void fvQuestion_PageIndexChanging(object sender, FormViewPageEventArgs e)
+        {
+            SaveAnswer();
+            fvQuestion.PageIndex = e.NewPageIndex;
+            BindFormView();
         }
 
         protected void fvQuestion_DataBound(object sender, EventArgs e)
         {
             if (fvQuestion.Row == null) return;
 
-            var hf = (HiddenField)fvQuestion.FindControl("hfQuestionID");
-            if (hf == null || string.IsNullOrWhiteSpace(hf.Value)) return;
-            int qid = int.Parse(hf.Value);
+            HiddenField hf = fvQuestion.FindControl("hfQuestionID") as HiddenField;
+            int qid = Convert.ToInt32(hf.Value);
 
-            var rbA = (RadioButton)fvQuestion.FindControl("rbA");
-            var rbB = (RadioButton)fvQuestion.FindControl("rbB");
-            var rbC = (RadioButton)fvQuestion.FindControl("rbC");
-            var rbD = (RadioButton)fvQuestion.FindControl("rbD");
-
-            rbA.Checked = rbB.Checked = rbC.Checked = rbD.Checked = false;
-
-            lblMsg.Text = ""; // Clear message for each question
-
-            if (Answers().TryGetValue(qid, out string saved) && !string.IsNullOrEmpty(saved))
+            if (Answers.TryGetValue(qid, out string ans))
             {
-                switch (saved)
-                {
-                    case "A": rbA.Checked = true; break;
-                    case "B": rbB.Checked = true; break;
-                    case "C": rbC.Checked = true; break;
-                    case "D": rbD.Checked = true; break;
-                }
-                //lblMsg.Text = "Answer saved ✅"; // Show only if answer exists
+                ((RadioButton)fvQuestion.FindControl("rbA")).Checked = ans == "A";
+                ((RadioButton)fvQuestion.FindControl("rbB")).Checked = ans == "B";
+                ((RadioButton)fvQuestion.FindControl("rbC")).Checked = ans == "C";
+                ((RadioButton)fvQuestion.FindControl("rbD")).Checked = ans == "D";
             }
         }
 
-        private void SaveCurrentSelection()
+        private void SaveAnswer()
         {
             if (fvQuestion.Row == null) return;
 
-            var hf = (HiddenField)fvQuestion.FindControl("hfQuestionID");
-            var rbA = (RadioButton)fvQuestion.FindControl("rbA");
-            var rbB = (RadioButton)fvQuestion.FindControl("rbB");
-            var rbC = (RadioButton)fvQuestion.FindControl("rbC");
-            var rbD = (RadioButton)fvQuestion.FindControl("rbD");
+            int qid = Convert.ToInt32(((HiddenField)fvQuestion.FindControl("hfQuestionID")).Value);
 
-            if (hf == null || string.IsNullOrWhiteSpace(hf.Value)) return;
+            string selected =
+                ((RadioButton)fvQuestion.FindControl("rbA")).Checked ? "A" :
+                ((RadioButton)fvQuestion.FindControl("rbB")).Checked ? "B" :
+                ((RadioButton)fvQuestion.FindControl("rbC")).Checked ? "C" :
+                ((RadioButton)fvQuestion.FindControl("rbD")).Checked ? "D" : null;
 
-            int qid = int.Parse(hf.Value);
-            string selected = rbA.Checked ? "A" : rbB.Checked ? "B" : rbC.Checked ? "C" : rbD.Checked ? "D" : null;
+            var ans = Answers;
 
-            if (!string.IsNullOrEmpty(selected))
-            {
-                Answers()[qid] = selected;
-                lblMsg.Text = "A";
-            }
-            else
-            {
-                // Remove saved answer if nothing is selected
-                if (Answers().ContainsKey(qid))
-                {
-                    Answers().Remove(qid);
-                }
-                lblMsg.Text = "";
-            }
+            if (selected == null) ans.Remove(qid);
+            else ans[qid] = selected;
         }
 
         protected void btnNext_Click(object sender, EventArgs e)
         {
-            SaveCurrentSelection();
-            DataTable dt = CurrentQuestions();
-            if (dt == null) return;
-
-            if (fvQuestion.PageIndex < dt.Rows.Count - 1)
-            {
-                fvQuestion.PageIndex++;
-                BindFormView();
-            }
+            SaveAnswer();
+            fvQuestion.PageIndex++;
+            BindFormView();
         }
 
         protected void btnPrev_Click(object sender, EventArgs e)
         {
-            SaveCurrentSelection();
-            if (fvQuestion.PageIndex > 0)
-            {
-                fvQuestion.PageIndex--;
-                BindFormView();
-            }
+            SaveAnswer();
+            fvQuestion.PageIndex--;
+            BindFormView();
         }
 
         protected void btnFinish_Click(object sender, EventArgs e)
         {
-            SaveCurrentSelection(); // Save last question answer
+            SaveAnswer();
 
-            DataTable dt = CurrentQuestions();
-            if (dt == null || dt.Rows.Count == 0) return;
+            int sid = Convert.ToInt32(Session["StudentID"]);
+            DataTable dt = Questions;
 
-            // Make sure student ID is in session
-            if (Session["StudentID"] == null)
-            {
-                lblMsg.Text = "⚠ Student not logged in.";
-                return;
-            }
+            int total = 0, scored = 0;
 
-            int studentId = Convert.ToInt32(Session["StudentID"]);
-
-            // Loop through all questions in session and save answers
             foreach (DataRow row in dt.Rows)
             {
                 int qid = Convert.ToInt32(row["QuestionID"]);
-                string chosen = null;
+                int marks = Convert.ToInt32(row["Marks"]);
+                string correct = row["CorrectOption"].ToString();
 
-                Answers().TryGetValue(qid, out chosen);
+                total += marks;
 
-                if (!string.IsNullOrEmpty(chosen))
-                {
-                    StudentAnswerDAL.InsertStudentAnswer(studentId, _examId, qid, chosen[0]);
-                }
-                else
-                {
-                    // Save as null/empty if student didn't answer
-                    StudentAnswerDAL.InsertStudentAnswer(studentId, _examId, qid, '\0');
-                }
+                Answers.TryGetValue(qid, out string sel);
+                if (!string.IsNullOrEmpty(sel) && sel == correct)
+                    scored += marks;
+
+                char ans = string.IsNullOrEmpty(sel) ? '\0' : sel[0];
+
+                StudentAnswerDAL.InsertStudentAnswer(sid, examId, qid, ans);
             }
 
-            // ✅ Show success message instead of redirecting
-            lblMsg.Text = "🎉 You have successfully submitted your exam!<br/>" +
-                          "Do you want to see your result?";
-            lblMsg.ForeColor = System.Drawing.Color.Green;
+            decimal percent = (decimal)scored * 100 / total;
+
+            StudentResultDAL.SaveFinalResult(sid, examId, scored, total, percent);
+
+            lblMsg.Text = "🎉 Exam submitted successfully!";
+            btnPrev.Visible = btnNext.Visible = btnFinish.Visible = false;
             btnViewResult.Visible = true;
-
-            // Disable navigation buttons
-            btnPrev.Visible = false;
-            btnNext.Visible = false;
-            btnFinish.Visible = false;
-
-            
-            //Response.Redirect($"ViewResult.aspx?examId={_examId}");
-        }
-
-        protected void fvQuestion_PageIndexChanging(object sender, FormViewPageEventArgs e)
-        {
-            SaveCurrentSelection();
-            fvQuestion.PageIndex = e.NewPageIndex;
-            BindFormView();
         }
 
         protected void btnViewResult_Click(object sender, EventArgs e)
         {
-            
-
-            // Response.Redirect("~/Student/ViewResult.aspx?examId=" + _examId);
-
-            string encryptedExamId = CryptoHelper.Encrypt(_examId.ToString());
-
-           
-
-            string url = $"~/Student/ViewResult.aspx?examId={HttpUtility.UrlEncode(encryptedExamId)}";
-            Response.Redirect(url);
-
-
+            Response.Redirect($"~/Student/ViewResult.aspx?ExamID={examId}");
         }
-
     }
 }

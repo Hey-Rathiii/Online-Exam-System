@@ -24,15 +24,6 @@ namespace IIMTONLINEEXAM.Admin
         protected global::System.Web.UI.WebControls.HiddenField hdnActiveTab;
 
         /// <summary>
-        /// hlNavigate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hlNavigate;
-
-        /// <summary>
         /// pnlAddSubject control.
         /// </summary>
         /// <remarks>
@@ -40,15 +31,6 @@ namespace IIMTONLINEEXAM.Admin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAddSubject;
-
-        /// <summary>
-        /// lblMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
         /// txtSubjectName control.
@@ -168,13 +150,13 @@ namespace IIMTONLINEEXAM.Admin
         protected global::System.Web.UI.WebControls.Panel pnlInsertQuestion;
 
         /// <summary>
-        /// ddlExams control.
+        /// ddlExamsQuestion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlExams;
+        protected global::System.Web.UI.WebControls.DropDownList ddlExamsQuestion;
 
         /// <summary>
         /// txtQuestion control.

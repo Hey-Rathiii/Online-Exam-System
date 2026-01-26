@@ -1,16 +1,12 @@
-﻿using ExamClassLibrary.Model;
-using ExamLibrary.DAL;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ExamClassLibrary.Model;
+using ExamLibrary.DAL;
 
 namespace ExamClassLibrary.DAL
 {
-    public class QuestionDAL
+    public static class QuestionDAL
     {
         public static bool InsertQuestion(InsertQueDTO insert)
         {
@@ -19,16 +15,24 @@ namespace ExamClassLibrary.DAL
                 using (SqlCommand cmd = new SqlCommand("sp_InsertQuestion", DBHelper.Instance.GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ExamID", insert.ExamId);
+
+                    cmd.Parameters.AddWithValue("@ExamID", insert.ExamID);
                     cmd.Parameters.AddWithValue("@QuestionText", insert.QuestionText);
-                    cmd.Parameters.AddWithValue("@OptionA", insert.optionA);
-                    cmd.Parameters.AddWithValue("@OptionB", insert.optionB);
-                    cmd.Parameters.AddWithValue("@OptionC", insert.optionC);
-                    cmd.Parameters.AddWithValue("@OptionD", insert.optionD);
-                    cmd.Parameters.AddWithValue("@CorrectOption", insert.correctOption);
-                    cmd.Parameters.AddWithValue("@Marks", insert.marks);
+                    cmd.Parameters.AddWithValue("@OptionA", insert.OptionA);
+                    cmd.Parameters.AddWithValue("@OptionB", insert.OptionB);
+                    cmd.Parameters.AddWithValue("@OptionC", insert.OptionC);
+                    cmd.Parameters.AddWithValue("@OptionD", insert.OptionD);
+                    cmd.Parameters.AddWithValue("@CorrectOption", insert.CorrectOption);
+                    cmd.Parameters.AddWithValue("@Marks", insert.Marks);
+
+                    SqlParameter outId = new SqlParameter("@NewQuestionID", SqlDbType.Int);
+                    outId.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outId);
 
                     cmd.ExecuteNonQuery();
+
+                    insert.QuestionID = (int)outId.Value;  // VERY IMPORTANT
+
                     return true;
                 }
             }
@@ -41,6 +45,8 @@ namespace ExamClassLibrary.DAL
                 DBHelper.Instance.CloseConnection();
             }
         }
+
+
         public static bool UpdateQuestion(InsertQueDTO queDTO)
         {
             try
@@ -48,22 +54,23 @@ namespace ExamClassLibrary.DAL
                 using (SqlCommand cmd = new SqlCommand("sp_UpdateQuestion", DBHelper.Instance.GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@QuestionID", queDTO.QuestionId);
-                    cmd.Parameters.AddWithValue("@ExamID", queDTO.ExamId);
+                    cmd.Parameters.AddWithValue("@QuestionID", queDTO.QuestionID);
+                    cmd.Parameters.AddWithValue("@ExamID", queDTO.ExamID);
                     cmd.Parameters.AddWithValue("@QuestionText", queDTO.QuestionText);
-                    cmd.Parameters.AddWithValue("@OptionA", queDTO.optionA);
-                    cmd.Parameters.AddWithValue("@OptionB", queDTO.optionB);
-                    cmd.Parameters.AddWithValue("@OptionC", queDTO.optionC);
-                    cmd.Parameters.AddWithValue("@OptionD", queDTO.optionD);
-                    cmd.Parameters.AddWithValue("@CorrectOption", queDTO.correctOption);
-                    cmd.Parameters.AddWithValue("@Marks", queDTO.marks);
+                    cmd.Parameters.AddWithValue("@OptionA", queDTO.OptionA);
+                    cmd.Parameters.AddWithValue("@OptionB", queDTO.OptionB);
+                    cmd.Parameters.AddWithValue("@OptionC", queDTO.OptionC);
+                    cmd.Parameters.AddWithValue("@OptionD", queDTO.OptionD);
+                    cmd.Parameters.AddWithValue("@CorrectOption", queDTO.CorrectOption);
+                    cmd.Parameters.AddWithValue("@Marks", queDTO.Marks);
 
                     cmd.ExecuteNonQuery();
                     return true;
                 }
             }
-            catch
+            catch 
             {
+                // log ex
                 return false;
             }
             finally
@@ -72,21 +79,22 @@ namespace ExamClassLibrary.DAL
             }
         }
 
-        public static bool DeleteQuestion(InsertQueDTO queDTO)
+        public static bool DeleteQuestion(int questionId)
         {
             try
             {
                 using (SqlCommand cmd = new SqlCommand("sp_DeleteQuestion", DBHelper.Instance.GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@QuestionID", queDTO.QuestionId);
+                    cmd.Parameters.AddWithValue("@QuestionID", questionId);
 
                     cmd.ExecuteNonQuery();
                     return true;
                 }
             }
-            catch
+            catch 
             {
+                // log ex
                 return false;
             }
             finally
@@ -95,18 +103,19 @@ namespace ExamClassLibrary.DAL
             }
         }
 
-        public static DataTable GetQuestionsByExamId(InsertQueDTO queDTO)
+        public static DataTable GetQuestionsByExamId(InsertQueDTO dto)
         {
             try
             {
                 using (SqlCommand cmd = new SqlCommand("sp_GetQuestionsByExamId", DBHelper.Instance.GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ExamID", queDTO.ExamId);
+                    cmd.Parameters.AddWithValue("@ExamID", dto.ExamID);
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
+
                     return dt;
                 }
             }
@@ -119,7 +128,6 @@ namespace ExamClassLibrary.DAL
                 DBHelper.Instance.CloseConnection();
             }
         }
-
 
 
     }

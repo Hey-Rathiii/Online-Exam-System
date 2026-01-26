@@ -24,8 +24,8 @@ namespace IIMTONLINEEXAM.Student
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            
 
+            
             if (!IsPostBack)
             {
                 int studentId = 0;
@@ -34,10 +34,8 @@ namespace IIMTONLINEEXAM.Student
                 // Get studentId and examId from QueryString or Session (set these before redirecting here)
                 if (Session["StudentID"] != null && Request.QueryString["ExamID"] != null)
                 {
-
                     studentId = Convert.ToInt32(Session["StudentID"]);
-                    string decExamId = CryptoHelper.Decrypt(HttpUtility.UrlDecode(Request.QueryString["ExamID"]));
-                    int.TryParse(decExamId, out examId);
+                    int.TryParse(Request.QueryString["ExamID"], out examId);  // plain read, NO DECRYPT
 
                     if (studentId > 0 && examId > 0)
                     {
@@ -52,6 +50,7 @@ namespace IIMTONLINEEXAM.Student
                 {
                     lblMessage.Text = "Student ID or Exam ID is missing.";
                 }
+
             }
         }
 

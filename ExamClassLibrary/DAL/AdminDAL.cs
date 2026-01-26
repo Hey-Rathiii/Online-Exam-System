@@ -12,7 +12,7 @@ namespace ExamLibrary.DAL
     public class AdminLoginResult
     {
         public int ResultCode { get; set; }
-        public int? AdminId { get; set; }
+        public int? AdminID { get; set; }
     }
     public class AdminDAL
     {
@@ -100,9 +100,9 @@ namespace ExamLibrary.DAL
 
                     result.ResultCode = Convert.ToInt32(cmd.Parameters["@Result"].Value);
 
-                    if (result.ResultCode == 2)
+                    if (result.ResultCode > 0)
                     {
-                        result.AdminId = Convert.ToInt32(cmd.Parameters["@admin_id"].Value);
+                        result.AdminID = Convert.ToInt32(cmd.Parameters["@admin_id"].Value);
                     }
                 }
             }

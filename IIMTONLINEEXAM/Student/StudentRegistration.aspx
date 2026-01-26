@@ -1,298 +1,262 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="StudentRegistration.aspx.cs" Inherits="IIMTONLINEEXAM.Student.StudentRegistration" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Student Registration | IIMT Online Exam</title>
 
-
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Toastify -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
-        body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #83a4d4, #b6fbff);
+
+        /* SAME CANVA AURORA BACKGROUND */
+       body {
+    margin: 0;
+    height: 100vh;
+    padding: 30px;
+    overflow: hidden;
+
+    /* 🐍 DARK EMERALD NINJA THEME */
+    background: radial-gradient(circle at 25% 25%, #00241a, #004d40, #00695c, #003c3c);
+    background-size: 400% 400%;
+    animation: auroraMove 15s ease infinite;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Inter", sans-serif;
+}
+
+        @keyframes auroraMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 80%; }
+            100% { background-position: 0% 0%; }
         }
 
-        .form-wrapper {
-            height: 100vh;
+        /* FLOATING BLUR BLOBS */
+        .blob {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.45;
+            animation: blobFloat 18s infinite ease-in-out;
+        }
+
+        .blob1 { background: #ff4ecd; top: 5%; left: 10%; }
+        .blob2 { background: #4fc3f7; bottom: 10%; right: 10%; }
+        .blob3 { background: #9d4edd; bottom: 35%; left: 30%; }
+
+        @keyframes blobFloat {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-60px); }
+        }
+
+        /* FULL SQUARE GLASS CARD */
+        .glass-card {
+            width: 550px;
+            height: 650px; /* taller for form fields */
+            padding: 35px;
+
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(22px);
+            border: 1px solid rgba(255,255,255,0.25);
+
+            border-radius: 40px;
+            box-shadow:
+                0 0 2px rgba(255,255,255,0.9),
+                0 25px 80px rgba(0,0,0,0.50);
+
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 20px;
+            animation: fadeUp 1s ease;
+            overflow-y: auto;
         }
 
-        .register-card {
-            background: #ffffffea;
-            padding: 40px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            animation: fadeIn 0.7s ease-in-out;
-            position: relative;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* LOTTIE ICON */
+        #lottie-reg {
+            width: 140px;
+            margin-bottom: 10px;
         }
 
-        h1 {
+        /* TITLES */
+        .title {
             text-align: center;
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-weight: bold;
+            font-size: 30px;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-            h1::before {
-                content: "🧑‍🎓 ";
-            }
-
-        .form-label {
-            font-weight: 600;
-            color: #34495e;
+        .subtitle {
+            text-align: center;
+            color: #ffffffcc;
+            margin-bottom: 25px;
+            font-size: 15px;
         }
 
+        /* INPUTS */
         .form-control {
-            border-radius: 10px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            margin-bottom: 14px;
         }
 
-        .btn-primary {
-            background-color: #2980b9;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        .form-control::placeholder {
+            color: #ffffffaa;
         }
 
-            .btn-primary:hover {
-                background-color: #1f6391;
-            }
-
-        .login-link {
-            text-align: center;
-            margin-top: 18px;
-            font-size: 14px;
+        .form-control:focus {
+            background: rgba(255,255,255,0.35);
+            border-color: #fff;
+            box-shadow: 0 0 12px #ffffffaa;
         }
 
-            .login-link a {
-                color: #2980b9;
-                text-decoration: none;
-                font-weight: 600;
-            }
-
-        .is-invalid {
-            border-color: #e74c3c !important;
-        }
-
+        /* PASSWORD ICON */
         .password-wrapper {
+            width: 100%;
             position: relative;
         }
-
-
-
-            .password-wrapper .form-control {
-                padding-right: 42px; /* space for eye icon */
-                height: 44px; /* uniform input height */
-            }
 
         .toggle-password {
             position: absolute;
+            right: 12px;
             top: 50%;
-            right: 14px;
             transform: translateY(-50%);
+            color: #fff;
             cursor: pointer;
             font-size: 18px;
-            color: #555;
-            z-index: 2;
         }
 
-        .toggle-switch {
-            position: absolute;
-            top: 78px; /* below h1 */
-            right: 20px;
-            cursor: pointer;
-            font-size: 20px;
-            color: #444;
-            z-index: 5;
+        /* BUTTON */
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 16px;
+            margin-top: 10px;
+
+            background: linear-gradient(145deg, #7209b7, #f72585);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+
+            box-shadow: 0 8px 28px rgba(247,37,133,0.45);
+            transition: 0.3s ease;
         }
 
-
-        .dark-mode {
-            background: #1a1a1a !important;
-            color: #eee !important;
+        .btn-register:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(247,37,133,0.55);
         }
 
-            .dark-mode .form-control {
-                background: #333 !important;
-                color: #fff;
-                border: 1px solid #555;
-            }
-
-            .dark-mode .register-card {
-                background: #2a2a2a !important;
-            }
-
-            .dark-mode .form-label {
-                color: #ccc !important;
-            }
-
-            .dark-mode .btn-primary {
-                background-color: #0a84ff !important;
-            }
-
-            .dark-mode .toggle-switch {
-                color: #ccc;
-            }
-
-        @media (max-width: 576px) {
-            .register-card {
-                padding: 30px 20px;
-            }
+        .reg-link {
+            margin-top: 15px;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
         }
+
+        .reg-link a {
+            color: white;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .error-text {
+            color: #ffd1d1;
+            text-align: center;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
+
 <body>
-    <form id="form1" runat="server">
-        <div class="form-wrapper">
-            <div class="register-card">
-                <i class="bi bi-moon-stars toggle-switch" id="darkToggle" title="Toggle Dark Mode"></i>
-                <h1>Student Registration</h1>
 
-                <div class="mb-3">
-                    <label for="txtFullName" class="form-label">Full Name</label>
-                    <asp:TextBox ID="txtFullName" runat="server" CssClass="form-control" Placeholder="Enter Full Name" />
-                </div>
+    <!-- BACKGROUND BLOBS -->
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
 
-                <div class="mb-3">
-                    <label for="txtEmail" class="form-label">Email</label>
-                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" placeholder="Enter email" />
-                </div>
-
-                <div class="mb-3 password-wrapper">
-                    <label for="txtPassword" class="form-label">Password</label>
-                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Create password" />
-                    <i class="bi bi-eye-slash toggle-password" toggle="<%= txtPassword.ClientID %>"></i>
-                </div>
-
-                <div class="mb-3 password-wrapper">
-                    <label for="txtConfirmPassword" class="form-label">Confirm Password</label>
-                    <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Confirm password" />
-                    <i class="bi bi-eye-slash toggle-password" toggle="<%= txtConfirmPassword.ClientID %>"></i>
-                </div>
-
-                <div class="mb-3">
-                    <label for="txtContact" class="form-label">Contact Number</label>
-                    <asp:TextBox ID="txtContact" runat="server" CssClass="form-control" placeholder="Enter contact number" />
-                </div>
-
-                <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn btn-primary w-100 mt-2" OnClick="btnRegister_Click" />
-                <asp:Label ID="lblMessage" runat="server" CssClass="d-none"></asp:Label>
-
-                <div class="login-link">
-                    <small>Already registered? <a href="Login.aspx">Sign In</a></small>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Toggle password
-            $(".toggle-password").click(function () {
-                const inputId = $(this).attr("toggle");
-                const input = $("#" + inputId);
-                const isPassword = input.attr("type") === "password";
-                input.attr("type", isPassword ? "text" : "password");
-                $(this).toggleClass("bi-eye bi-eye-slash");
+    <!-- LOTTIE ANIMATION -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            lottie.loadAnimation({
+                container: document.getElementById("lottie-reg"),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://assets7.lottiefiles.com/packages/lf20_puciaact.json"
             });
-
-            // Toggle dark mode
-            $("#darkToggle").click(function () {
-                $("body").toggleClass("dark-mode");
-            });
-
-            // Client-side validation
-            $('#<%= btnRegister.ClientID %>').click(function (e) {
-                let isValid = true;
-
-                const nameBox = $('#<%= txtFullName.ClientID %>');
-                const emailBox = $('#<%= txtEmail.ClientID %>');
-                const passwordBox = $('#<%= txtPassword.ClientID %>');
-                const confirmPasswordBox = $('#<%= txtConfirmPassword.ClientID %>');
-                const contactBox = $('#<%= txtContact.ClientID %>');
-
-                const name = nameBox.val().trim();
-                const email = emailBox.val().trim();
-                const password = passwordBox.val().trim();
-                const confirmPassword = confirmPasswordBox.val().trim();
-                const contact = contactBox.val().trim();
-
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{6,15}$/;
-                const phoneRegex = /^[0-9]{10}$/;
-
-                $('.form-control').removeClass('is-invalid');
-
-                if (!name) { nameBox.addClass('is-invalid'); isValid = false; }
-                if (!email || !emailRegex.test(email)) { emailBox.addClass('is-invalid'); isValid = false; }
-                if (!password || !passwordRegex.test(password)) { passwordBox.addClass('is-invalid'); isValid = false; }
-                if (!confirmPassword || confirmPassword !== password) { confirmPasswordBox.addClass('is-invalid'); isValid = false; }
-                if (!contact || !phoneRegex.test(contact)) { contactBox.addClass('is-invalid'); isValid = false; }
-
-                if (!isValid) {
-                    e.preventDefault();
-                    Toastify({
-                        text: "Please fix validation errors.",
-                        duration: 3500,
-                        gravity: "top",
-                        position: "center",
-                        backgroundColor: "#ff6f61"
-                    }).showToast();
-                }
-            });
-
-            // Allow only numbers in contact
-            $('#<%= txtContact.ClientID %>').on('keypress', function (e) {
-                const key = e.which ? e.which : e.keyCode;
-                if (key < 48 || key > 57) e.preventDefault();
-            });
-
-            // Show server message
-            const msg = $('#<%= lblMessage.ClientID %>').text().trim();
-            if (msg !== '') {
-                Toastify({
-                    text: msg,
-                    duration: 4000,
-                    gravity: "top",
-                    position: "center",
-                    backgroundColor: "#28a745"
-                }).showToast();
-            }
         });
     </script>
+
+    <form id="form1" runat="server">
+
+        <div class="glass-card">
+
+            <div id="lottie-reg"></div>
+
+            <div class="title">Create Account</div>
+            <div class="subtitle">Fill the details to register</div>
+
+            <asp:TextBox ID="txtFullName" runat="server" CssClass="form-control" placeholder="Full Name" />
+
+            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" placeholder="Email Address" />
+
+            <div class="password-wrapper">
+                <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Password" />
+                <i class="bi bi-eye-slash toggle-password" toggle="<%= txtPassword.ClientID %>"></i>
+            </div>
+
+            <div class="password-wrapper">
+                <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Confirm Password" />
+                <i class="bi bi-eye-slash toggle-password" toggle="<%= txtConfirmPassword.ClientID %>"></i>
+            </div>
+
+            <asp:TextBox ID="txtContact" runat="server" CssClass="form-control" placeholder="Contact Number" />
+
+            <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-register" OnClick="btnRegister_Click" />
+
+            <asp:Label ID="lblMessage" runat="server" CssClass="error-text"></asp:Label>
+
+            <div class="reg-link">
+                Already registered? <a href="Login.aspx">Sign In</a>
+            </div>
+
+        </div>
+
+    </form>
+
+    <!-- PASSWORD TOGGLE -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(".toggle-password").click(function () {
+            let input = $("#" + $(this).attr("toggle"));
+            input.attr("type", input.attr("type") === "password" ? "text" : "password");
+            $(this).toggleClass("bi-eye bi-eye-slash");
+        });
+    </script>
+
 </body>
 </html>
-

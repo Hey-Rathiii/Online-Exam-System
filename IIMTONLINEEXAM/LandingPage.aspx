@@ -20,7 +20,7 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand text-gold" href="#">IIMT EXAM</a>
+                <a class="navbar-brand text-gold" href="#">ONLINE EXAM SYSTEM</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>

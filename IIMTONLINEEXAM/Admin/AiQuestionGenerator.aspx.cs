@@ -6,7 +6,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ExamClassLibrary.DAL;
 using ExamClassLibrary.Model;
-using ExamLibrary.DAL;
 using Newtonsoft.Json.Linq;
 using System.Data.SqlClient;
 using System.Configuration;
@@ -23,11 +22,16 @@ namespace IIMTONLINEEXAM.Admin
             }
         }
 
+        // ---------------------------------------------------------
+        // LOAD SUBJECTS
+        // ---------------------------------------------------------
         private void LoadSubjects()
         {
-            SubjectDTO dto = new SubjectDTO();
-            dto.statusFilter = -1;
-            dto.AdminID = Convert.ToInt32(Session["AdminID"]);
+            SubjectDTO dto = new SubjectDTO
+            {
+                StatusFilter = -1,
+                CreatedBy = Convert.ToInt32(Session["AdminID"])
+            };
 
             DataTable dt = SubjectDAL.GetAllSubjects(dto);
 
@@ -38,11 +42,17 @@ namespace IIMTONLINEEXAM.Admin
             ddlSubjectsAI.Items.Insert(0, "-- Select Subject --");
         }
 
+        // ---------------------------------------------------------
+        // LOAD EXAMS FOR SELECTED SUBJECT
+        // ---------------------------------------------------------
         private void LoadExams()
         {
-            ExamDTO dto = new ExamDTO();
-            dto.statusFilter = -1;
-            dto.adminId = Convert.ToInt32(Session["AdminID"]);
+            ExamDTO dto = new ExamDTO
+            {
+                StatusFilter = -1,
+                CreatedBy = Convert.ToInt32(Session["AdminID"]),
+                SubjectID = Convert.ToInt32(ddlSubjectsAI.SelectedValue)
+            };
 
             DataTable dt = ExamDAL.GetExams(dto);
 
@@ -55,9 +65,13 @@ namespace IIMTONLINEEXAM.Admin
 
         protected void ddlSubjectsAI_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadExams();
+            if (ddlSubjectsAI.SelectedIndex > 0)
+                LoadExams();
         }
 
+        // -------------------------------------------------------------
+        // GENERATE QUESTIONS USING OPENAI API
+        // -------------------------------------------------------------
         protected async void btnGenerate_Click(object sender, EventArgs e)
         {
             lblOutput.Text = "";
@@ -123,6 +137,7 @@ No explanation, no extra text.
                     JObject json = JObject.Parse(result);
                     string aiText = json["choices"][0]["message"]["content"].ToString();
 
+                    // Parse AI Response
                     string[] lines = aiText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                     StringBuilder currentQuestion = new StringBuilder();
                     DataTable dtQuestions = new DataTable();
@@ -153,6 +168,9 @@ No explanation, no extra text.
             }
         }
 
+        // -------------------------------------------------------------
+        // SAVE SELECTED QUESTIONS TO DATABASE
+        // -------------------------------------------------------------
         protected void btnSaveSelected_Click(object sender, EventArgs e)
         {
             var selectedQuestions = new System.Collections.Generic.List<string>();
@@ -196,6 +214,9 @@ No explanation, no extra text.
             }
         }
 
+        // -------------------------------------------------------------
+        // PARSE EACH QUESTION & SAVE TO DB
+        // -------------------------------------------------------------
         private bool SaveQuestionToDatabase(string questionBlock, int examId)
         {
             string[] lines = questionBlock.Split('\n');
@@ -224,12 +245,14 @@ No explanation, no extra text.
             if (string.IsNullOrEmpty(questionText) || string.IsNullOrEmpty(correctOption))
                 return false;
 
+            // SAVE USING YOUR SP WITH OUTPUT PARAM
             using (SqlConnection con = new SqlConnection(
                 ConfigurationManager.ConnectionStrings["DBConcetion"].ConnectionString))
             {
                 using (SqlCommand cmd = new SqlCommand("sp_InsertQuestion", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+
                     cmd.Parameters.AddWithValue("@ExamID", examId);
                     cmd.Parameters.AddWithValue("@QuestionText", questionText);
                     cmd.Parameters.AddWithValue("@OptionA", optionA);
@@ -239,13 +262,22 @@ No explanation, no extra text.
                     cmd.Parameters.AddWithValue("@CorrectOption", correctOption);
                     cmd.Parameters.AddWithValue("@Marks", marks);
 
+                    // ⭐ REQUIRED OUTPUT PARAMETER ⭐
+                    SqlParameter outId = new SqlParameter("@NewQuestionID", SqlDbType.Int);
+                    outId.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outId);
+
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
+
+                    // (Optional) If you want the newly inserted QuestionID:
+                    // int newId = Convert.ToInt32(outId.Value);
                 }
             }
 
             return true;
+
         }
     }
 }

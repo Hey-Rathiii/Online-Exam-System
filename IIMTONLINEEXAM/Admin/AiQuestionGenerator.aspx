@@ -75,6 +75,11 @@
     </style>
 </head>
 <body>
+    <button onclick="window.location.href='Dashboard.aspx?tab=question'" 
+        class="btn btn-secondary">
+    ← Back to Questions
+</button>
+
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" />
 

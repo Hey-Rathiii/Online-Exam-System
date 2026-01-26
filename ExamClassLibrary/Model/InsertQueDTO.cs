@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 namespace ExamClassLibrary.Model
 {
     public class InsertQueDTO
-    {
-        public int QuestionId { get; set; }
-        public int ExamId { get; set; }
-        public string QuestionText { get; set; }
-        public string optionA { get; set; }
-        public string optionB { get; set; }
-        public string optionC { get; set; }
-        public string optionD { get; set; }
-        public string correctOption { get; set; }
-        public int marks { get; set; }
+    {       
 
+        public int QuestionID { get; set; }
+        public int ExamID { get; set; }
+
+        public string QuestionText { get; set; }
+        public string OptionA { get; set; }
+        public string OptionB { get; set; }
+        public string OptionC { get; set; }
+        public string OptionD { get; set; }
+
+        public string CorrectOption { get; set; }
+        public int Marks { get; set; }
     }
+
 }

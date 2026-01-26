@@ -63,7 +63,7 @@ namespace IIMTONLINEEXAM.Student
                 if (studentId > 0) // valid student
                 {
                     Session["StudentID"] = studentId;
-                    Response.Redirect("~/Student/ShowExams.aspx");
+                    Response.Redirect("~/Student/Home.aspx");
                 }
 
             }

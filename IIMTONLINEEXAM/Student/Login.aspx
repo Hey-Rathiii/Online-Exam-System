@@ -1,141 +1,227 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="IIMTONLINEEXAM.Student.Login" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-   
     <title>Student Login | IIMT Online Exam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Bootstrap CDN -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
 
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #83a4d4, #b6fbff);
+
+        /* AURORA BACKGROUND */
+       
+body {
+    margin: 0;
+    height: 100vh;
+    padding: 30px;
+    overflow: hidden;
+
+    /* 🐍 DARK EMERALD NINJA THEME */
+    background: radial-gradient(circle at 25% 25%, #00241a, #004d40, #00695c, #003c3c);
+    background-size: 400% 400%;
+    animation: auroraMove 15s ease infinite;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Inter", sans-serif;
+}
+
+
+
+        @keyframes auroraMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 80%; }
+            100% { background-position: 0% 0%; }
         }
 
-        .login-wrapper {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        /* FLOATING BLUR BLOBS */
+        .blob {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.45;
+            animation: blobFloat 18s infinite ease-in-out;
         }
 
-        .login-card {
-            background: #ffffffee;
+        .blob1 { background: #ff4ecd; top: 5%; left: 10%; }
+        .blob2 { background: #4fc3f7; bottom: 10%; right: 10%; }
+        .blob3 { background: #9d4edd; bottom: 35%; left: 30%; }
+
+        @keyframes blobFloat {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(-60px); }
+        }
+
+        /* PERFECT SQUARE GLASS BOX */
+        .glass-card {
+            width: 550px;
+            height: 550px; /* FULL SQUARE */
             padding: 40px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.6s ease-in-out;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            border-radius: 25px;
+
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(22px);
+            border: 1px solid rgba(255,255,255,0.25);
+
+            box-shadow:
+                0 0 2px rgba(255,255,255,0.9),
+                0 25px 80px rgba(0,0,0,0.50);
+
+            animation: fadeUp 1s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
-            font-size: 26px;
+        .title {
             text-align: center;
-            margin-bottom: 30px;
-            color: #2c3e50;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 5px;
         }
 
-        .form-label {
+        .subtitle {
+            text-align: center;
+            color: #ffffffcc;
+            margin-bottom: 20px;
+        }
+
+        #lottie-login {
+            width: 140px;
+            margin-bottom: 15px;
+        }
+
+        /* INPUTS */
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .form-control::placeholder {
+            color: #ffffffaa;
+        }
+
+        .form-control:focus {
+            background: rgba(255,255,255,0.4);
+            border-color: #fff;
+            box-shadow: 0 0 10px #ffffffaa;
+        }
+
+        /* BUTTON */
+        .btn-login {
+            margin-top: 5px;
+            padding: 14px;
+            width: 100%;
+            border-radius: 14px;
+            background: linear-gradient(145deg, #7209b7, #f72585);
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(247,37,133,0.4);
+        }
+
+        .btn-login:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(247,37,133,0.55);
+        }
+
+        .text-danger {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 8px;
+            color: #ffd1d1;
+        }
+
+        .register-text {
+            margin-top: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .register-text a {
+            color: #fff;
+            text-decoration: underline;
             font-weight: 600;
         }
 
-        .btn-primary {
-            background-color: #2980b9;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #1f6391;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .is-invalid {
-            border-color: #e74c3c !important;
-        }
-
-        .text-danger, .text-success {
-            text-align: center;
-        }
     </style>
 </head>
+
 <body>
-    <form id="form1" runat="server">
-        <div class="login-wrapper">
-            <div class="login-card">
-                <h2>🔐 Student Login</h2>
 
-                <div class="mb-3">
-                    <label for="txtEmail" class="form-label">Email</label>
-                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" placeholder="Enter email" />
-                </div>
+    <!-- BACKGROUND BLOBS -->
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
 
-                <div class="mb-3">
-                    <label for="txtPassword" class="form-label">Password</label>
-                    <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" placeholder="Enter password" />
-                </div>
-
-                <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn btn-primary w-100" OnClick="btnLogin_Click" />
-                <asp:Label ID="lblMessage" runat="server" CssClass="text-danger mt-3 d-block" />
-
-                <div class="register-link">
-                    <span>Don’t have an account?</span> <a href="StudentRegistration.aspx">Register Here</a>
-                </div>
-                
-            </div>
-        </div>
-    </form>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Client-side Validation -->
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#<%= btnLogin.ClientID %>').click(function (e) {
-                let email = $('#<%= txtEmail.ClientID %>').val().trim();
-                let password = $('#<%= txtPassword.ClientID %>').val().trim();
-
-                let isValid = true;
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                $('.form-control').removeClass('is-invalid');
-
-                if (email === '') {
-                    $('#<%= txtEmail.ClientID %>').addClass('is-invalid').attr('placeholder', 'Email required');
-                    isValid = false;
-                } else if (!emailRegex.test(email)) {
-                    $('#<%= txtEmail.ClientID %>').addClass('is-invalid').val('').attr('placeholder', 'Invalid email');
-                    isValid = false;
-                }
-
-                if (password === '') {
-                    $('#<%= txtPassword.ClientID %>').addClass('is-invalid').attr('placeholder', 'Password required');
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    e.preventDefault(); // stop postback
-                }
+    <!-- LOTTIE LOADER -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            lottie.loadAnimation({
+                container: document.getElementById("lottie-login"),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: "https://assets7.lottiefiles.com/packages/lf20_puciaact.json"
             });
         });
     </script>
+
+    <!-- LOGIN FORM SQUARE BOX -->
+    <form id="form1" runat="server">
+        <div class="glass-card">
+
+            <div id="lottie-login"></div>
+
+            <div class="title">Student Login</div>
+            <div class="subtitle">Sign in to continue to Online Exam</div>
+
+            <asp:TextBox ID="txtEmail" runat="server"
+                CssClass="form-control"
+                TextMode="Email"
+                placeholder="Email Address" />
+
+            <asp:TextBox ID="txtPassword" runat="server"
+                CssClass="form-control"
+                TextMode="Password"
+                placeholder="Password" />
+
+            <asp:Button ID="btnLogin" runat="server" Text="Login"
+                CssClass="btn-login"
+                OnClick="btnLogin_Click" />
+
+            <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block" />
+
+            <div class="register-text">
+                New here? <a href="StudentRegistration.aspx">Create an account</a>
+            </div>
+
+        </div>
+    </form>
+
 </body>
 </html>

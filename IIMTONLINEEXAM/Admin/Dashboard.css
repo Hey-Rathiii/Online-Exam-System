@@ -1,0 +1,127 @@
+﻿<style >
+/* GLOBAL BG */
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    font-family: 'Inter', sans-serif;
+}
+
+/* PAGE WRAPPER */
+.container {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 25px 30px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    color: #e2e8f0;
+}
+
+/* DASHBOARD TITLE */
+h3 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(to right, #818cf8, #22d3ee);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* NAV TABS */
+.nav-tabs {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+    .nav-tabs .nav-link {
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 10px 20px;
+        border: none;
+    }
+
+        .nav-tabs .nav-link:hover {
+            color: white;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: #22d3ee !important;
+            font-weight: 700;
+        }
+
+/* TAB CONTENT AREA */
+.tab-content {
+    margin-top: 20px;
+    padding: 25px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+}
+
+/* FORM LABELS */
+td {
+    color: #e2e8f0;
+    font-size: 15px;
+}
+
+/* INPUTS */
+.form-control, input[type="text"], input[type="date"], input[type="time"], select, textarea {
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    color: #f1f5f9 !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+}
+
+    .form-control:focus {
+        border-color: #22d3ee !important;
+        box-shadow: 0 0 8px #22d3ee55 !important;
+    }
+
+/* BUTTONS */
+.btn-primary {
+    background: linear-gradient(to right, #3b82f6, #06b6d4);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+    .btn-primary:hover {
+        transform: scale(1.02);
+        background: linear-gradient(to right, #2563eb, #0891b2);
+    }
+
+/* TABLE */
+.table {
+    color: #e2e8f0;
+    background: rgba(255,255,255,0.03);
+}
+
+    .table thead {
+        background: rgba(255,255,255,0.1);
+    }
+
+    .table tbody tr td {
+        border-color: rgba(255,255,255,0.08);
+    }
+
+/* LINKS */
+a {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+    a:hover {
+        color: #93c5fd;
+    }
+
+/* EDIT + DELETE */
+.text-danger {
+    color: #f87171 !important;
+}
+
+    .text-danger:hover {
+        color: #ef4444 !important;
+    }
+
+</style >

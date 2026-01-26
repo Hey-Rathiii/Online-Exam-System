@@ -6,18 +6,23 @@
 
     namespace ExamClassLibrary.Model
     {
-        public class ExamDTO
-        {
-            public int subjectId { get; set; }
-            public string subjectName { get; set; }
-            public string examTitle { get; set; }
-            public DateTime examDate { get; set; }
-            public TimeSpan startTime { get; set; }
-            public TimeSpan endTime { get; set; }
-            public int durationMinutes { get; set; }
-            public int statusFilter { get; set; } // 0 for All, 1 for Active, 2 for Inactive
-            public int adminId { get; set; }
-            public int examId { get; set; }
-            public bool isActive { get; set; } = true;
-        }
+    public class ExamDTO
+    {
+        public int ExamID { get; set; }
+        public int SubjectID { get; set; }
+        public string SubjectName { get; set; }   // since exists in DB
+        public string ExamTitle { get; set; }
+        public DateTime ExamDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public int DurationMinutes { get; set; }
+
+        public bool IsActive { get; set; }
+        public int CreatedBy { get; set; }
+
+        // Filtering (optional)
+        public int StatusFilter { get; set; } = -1;
     }
+
+
+}
